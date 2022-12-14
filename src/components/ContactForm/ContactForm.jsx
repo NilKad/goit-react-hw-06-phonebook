@@ -1,12 +1,26 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
+import { add } from 'redux/phonebookSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 import css from 'components/ContactForm/ContactForm.module.css';
 
-const ContactForm = ({ onAddPhonebook }) => {
+const ContactForm = () => {
+  const contacts = useSelector(state => state.contacts.contactsList);
+  const dispatch = useDispatch();
+
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const onAddPhonebook = ({ id, name, number }) => {
+    if (contacts.find(el => el.name === name)) {
+      alert(`${name} is arledy is contacts`);
+      return false;
+    }
+    dispatch(add({ id, name, number }));
+    return true;
+  };
 
   const onInputHandle = e => {
     const { name, value } = e.currentTarget;
@@ -26,7 +40,6 @@ const ContactForm = ({ onAddPhonebook }) => {
 
   const onSubmitPhonebook = e => {
     e.preventDefault();
-
     const isWrite = onAddPhonebook({
       id: nanoid(7),
       name: name,

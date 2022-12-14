@@ -1,14 +1,23 @@
 import css from './Filter.module.css';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateFilter } from 'redux/phonebookSlice';
 
-export const Filter = ({ onInputHandle, filterValue }) => {
+export const Filter = ({ filterValue }) => {
+  const filter = useSelector(state => state.filterContact.filter);
+  const dispatch = useDispatch();
+
+  const onInputFilterHandle = e => {
+    dispatch(updateFilter(e.currentTarget.value));
+  };
+
   return (
     <input
       type="text"
       name="filter"
       className={css.input}
-      onInput={onInputHandle}
-      value={filterValue}
+      onInput={onInputFilterHandle}
+      value={filter}
     />
   );
 };
